@@ -24,21 +24,21 @@ namespace ASP.Controllers
             int id = Int32.Parse(User.Identity.Name);
 
             //var Items = db.Schedulers.Where(Sh => Sh.userId == id).ToList().OrderBy(Sh => Sh.EndDate);
-            //List<Scheduler>Items = db.Schedulers.Where(Sh => Sh.userId == id).ToList();
+            var Items = db.Schedulers.Where(Sh => Sh.userId == id).ToList();
 
-            List<Scheduler> Items=new List<Scheduler>();
-            foreach (var item in db.Schedulers.ToList()){
-                if(item.userId == id)
-                {
-                    Items.Add(item);
-                }
-                //if (DateTime.Compare(item.EndDate, DateTime.Now) < 1)
-                //{
-                //    SendEmail(item, id);
-                //}
-            }
+            //List<Scheduler> Items=new List<Scheduler>();
+            //foreach (var item in db.Schedulers.ToList()){
+            //    if(item.userId == id)
+            //    {
+            //        Items.Add(item);
+            //    }
+            //if (DateTime.Compare(item.EndDate, DateTime.Now) < 1)
+            //{
+            //    SendEmail(item, id);
+            //}
+        //}
 
-            Items.Sort();
+        Items.Sort();
             return View(Items);
         }
         [HttpPost]
@@ -47,12 +47,14 @@ namespace ASP.Controllers
             AS_DBEntities db = new AS_DBEntities();
             int id = Int32.Parse(User.Identity.Name);
 
+            Name = "%" + Name + "%";
+            
             var Items = db.Schedulers.Where(Sh =>
                         (SqlFunctions.PatIndex(Name.ToLower(), Sh.Name.ToLower()) > 0)
-                        && (id == Sh.id))
+                        && (id == Sh.userId))
                         .ToList();
-            Items.Sort();
 
+            Items.Sort();
             return View(Items);
         }
         [Authorize]
